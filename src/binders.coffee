@@ -82,8 +82,8 @@ Rivets.public.binders.value =
   routine: (el, value) ->
     if el.tagName is 'INPUT' and el.type is 'radio'
       el.setAttribute 'value', value
-    else if window.jQuery?
-      el = jQuery el
+    else if window.$?
+      el = $ el
 
       if value?.toString() isnt el.val()?.toString()
         el.val if value? then value else ''

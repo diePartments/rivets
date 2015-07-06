@@ -2,13 +2,13 @@
 # -----------
 
 if window['jQuery'] or window['$']
-  [bindMethod, unbindMethod] = if 'on' of jQuery.prototype then ['on', 'off'] else ['bind', 'unbind']
-  
+  [bindMethod, unbindMethod] = if 'on' of $.prototype then ['on', 'off'] else ['bind', 'unbind']
+
   Rivets.Util =
-    bindEvent: (el, event, handler) -> jQuery(el)[bindMethod] event, handler
-    unbindEvent: (el, event, handler) -> jQuery(el)[unbindMethod] event, handler
+    bindEvent: (el, event, handler) -> $(el)[bindMethod] event, handler
+    unbindEvent: (el, event, handler) -> $(el)[unbindMethod] event, handler
     getInputValue: (el) ->
-      $el = jQuery el
+      $el = $ el
 
       if $el.attr('type') is 'checkbox' then $el.is ':checked'
       else do $el.val

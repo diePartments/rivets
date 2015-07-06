@@ -55,7 +55,7 @@
         return view;
       },
       init: function(component, el, data) {
-        var scope, view;
+        var scope, template, view;
         if (data == null) {
           data = {};
         }
@@ -63,7 +63,15 @@
           el = document.createElement('div');
         }
         component = Rivets["public"].components[component];
-        el.innerHTML = component.template.call(this, el);
+        template = component.template.call(this, el);
+        if (template instanceof HTMLElement) {
+          while (el.firstChild) {
+            el.removeChild(el.firstChild);
+          }
+          el.appendChild(template);
+        } else {
+          el.innerHTML = template;
+        }
         scope = component.initialize.call(this, el, data);
         view = new Rivets.View(el, scope);
         view.bind();
@@ -73,17 +81,17 @@
   };
 
   if (window['jQuery'] || window['$']) {
-    _ref = 'on' in jQuery.prototype ? ['on', 'off'] : ['bind', 'unbind'], bindMethod = _ref[0], unbindMethod = _ref[1];
+    _ref = 'on' in $.prototype ? ['on', 'off'] : ['bind', 'unbind'], bindMethod = _ref[0], unbindMethod = _ref[1];
     Rivets.Util = {
       bindEvent: function(el, event, handler) {
-        return jQuery(el)[bindMethod](event, handler);
+        return $(el)[bindMethod](event, handler);
       },
       unbindEvent: function(el, event, handler) {
-        return jQuery(el)[unbindMethod](event, handler);
+        return $(el)[unbindMethod](event, handler);
       },
       getInputValue: function(el) {
         var $el;
-        $el = jQuery(el);
+        $el = $(el);
         if ($el.attr('type') === 'checkbox') {
           return $el.is(':checked');
         } else {
@@ -262,7 +270,7 @@
       this.buildBinding = __bind(this.buildBinding, this);
       this.bindingRegExp = __bind(this.bindingRegExp, this);
       this.options = __bind(this.options, this);
-      if (!(this.els.jquery || this.els instanceof Array)) {
+      if (!(this.els.$ || this.els instanceof Array)) {
         this.els = [this.els];
       }
       _ref1 = Rivets.extensions;
@@ -1001,8 +1009,8 @@
       var o, _i, _len, _ref1, _ref2, _ref3, _results;
       if (el.tagName === 'INPUT' && el.type === 'radio') {
         return el.setAttribute('value', value);
-      } else if (window.jQuery != null) {
-        el = jQuery(el);
+      } else if (window.$ != null) {
+        el = $(el);
         if ((value != null ? value.toString() : void 0) !== ((_ref1 = el.val()) != null ? _ref1.toString() : void 0)) {
           return el.val(value != null ? value : '');
         }
